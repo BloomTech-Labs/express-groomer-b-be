@@ -31,7 +31,7 @@ const petRouter = require('./pets/petsRouter');
 
 const app = express();
 
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(pino)
 
