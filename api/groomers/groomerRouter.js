@@ -4,6 +4,10 @@ const groomer = require('./groomerModel');
 const router = express.Router();
 const upload = require('../../services/image-upload');
 const singleUpload = upload.single('image');
+const client = require('twilio')(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+)
 
 router.all('/', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN);
@@ -117,5 +121,26 @@ router.post('/license-upload/:id', authRequired, async (req, res) => {
     }
   });
 });
+
+router.post('/messages', (req, res) => {
+  res.header('Content-Type', 'application/json');
+  try{
+    client.messages
+    .create({
+      to: req.body.to,
+      body: req.body.body
+    })
+    .then(() => {
+      res.send(JSON.stringify({ success: true }))
+    })
+    .catch(error => {
+      console.log(error)
+      res.send(JSON.stringify({ success: false }))
+    })
+  } 
+  catch(error){
+    res.status(500).json({ message: error.message })
+  }
+})
 
 module.exports = router;
