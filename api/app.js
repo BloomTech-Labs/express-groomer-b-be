@@ -2,8 +2,6 @@ const createError = require('http-errors');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const pino = require('express-pino-logger');
 const logger = require('morgan');
 const helmet = require('helmet');
 const swaggerUi = require('swagger-ui-express');
@@ -30,10 +28,6 @@ const groomerServicesRouter = require('./groomerservices/groomerServicesRouter')
 const petRouter = require('./pets/petsRouter');
 
 const app = express();
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(pino);
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
