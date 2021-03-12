@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const pino = require('express-pino-logger');
 const authRequired = require('../middleware/authRequired');
 const groomer = require('./groomerModel');
 const router = express.Router();
@@ -13,7 +12,6 @@ const client = require('twilio')(
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
-router.use(pino);
 
 router.all('/', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN);
@@ -137,14 +135,16 @@ router.post('/messages', (req, res) => {
         to: req.body.to,
         body: req.body.body,
       })
-      .then(() => {
-        res.send(JSON.stringify({ success: true }));
+      .then((message) => {
+        console.log(message);
+        res.status(201).send(JSON.stringify({ success: true }));
       })
       .catch((error) => {
         console.log(error);
         res.send(JSON.stringify({ success: false }));
       });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 });
