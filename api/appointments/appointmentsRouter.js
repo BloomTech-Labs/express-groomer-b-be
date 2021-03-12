@@ -1,11 +1,11 @@
 const express = require('express');
-const authRequired = require('../middleware/authRequired');
+// const authRequired = require('../middleware/authRequired');
 const appointment = require('./appointmentsModel');
 const router = express.Router();
 
 
 /* GET ALLL APPOINTMENTS */
-router.get('/appointments', authRequired, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const data = await appointment.getAll();
         res.status(200).json(data);
@@ -17,7 +17,7 @@ router.get('/appointments', authRequired, async (req, res) => {
 });
 
 /* GET APPOINTMENTS BY ID */
-router.get('/:id', authRequired, async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         const data = await appointment.getById(req.params.id);
         res.status(200).json(data);
@@ -29,7 +29,7 @@ router.get('/:id', authRequired, async (req, res) => {
 });
 
 /* POST A NEW APPOINTMENT */
-router.post('/', authRequired, async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const existingAppointment = undefined;
         if (req.body.appointment_id) {
@@ -55,11 +55,9 @@ router.post('/', authRequired, async (req, res) => {
 
 
 // UPDATE APPOINTMENT BY ID
-router.put('/:id', authRequired, async (req, res) => {
+router.put('/:id', async (req, res) => {
     try {
-        //check to see if appointment exists
-        const existingAppointment = await appointment.getById(req.params.id);
-        if (existingAppointment) {
+        if (req.params.id) {
             const updates = await appointment.update(req.params.id, req.body);
             res.status(200).json({
                 message: "Appointment updated!", Appointment: updates
@@ -78,7 +76,7 @@ router.put('/:id', authRequired, async (req, res) => {
 
 
 // DELETE APPOINTMENT
-router.delete('/:id', authRequired, async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         if (!req.params.id) {
             return res.status(404).json({
