@@ -135,8 +135,7 @@ router.post('/messages', (req, res) => {
         to: req.body.to,
         body: req.body.body,
       })
-      .then((message) => {
-        console.log(message);
+      .then(() => {
         res.status(201).send(JSON.stringify({ success: true }));
       })
       .catch((error) => {
@@ -145,26 +144,6 @@ router.post('/messages', (req, res) => {
       });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
-  }
-});
-
-router.post('/test_messages', (req, res) => {
-  res.header('Content-Type', 'application/json');
-  try {
-    client.messages
-      .create({
-        to: req.body.to,
-        body: req.body.body,
-      })
-      .then(() => {
-        res.send(JSON.stringify({ success: true }));
-      })
-      .catch((error) => {
-        console.log(error);
-        res.send(JSON.stringify({ success: false }));
-      });
-  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
